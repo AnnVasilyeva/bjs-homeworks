@@ -1,12 +1,13 @@
 class Weapon {
 	constructor (weapon) {
-		this.name = weapon.name;
-		this.attack = weapon.attack;
-		this.durability = weapon.durability;
-		this.range = weapon.range;
-    this.durabilityOriginal;
+		this.name = weapon.name; //название
+		this.attack = weapon.attack; //уровень аттаки
+		this.durability = weapon.durability; //прочность оружия
+		this.range = weapon.range; //дальность
+		this.durabilityOriginal = this.durability;
 	}
 
+//метод, добавляющий повреждение от соперника
 	takeDamage(damage) {
 		this.durability -= damage;
     if (this.durability < 0) {
@@ -14,18 +15,20 @@ class Weapon {
     }
 	}
 
+//метод, рассчитывающий урон от удара данным оружием
   getDamage() {
-    if (this.durability === 0) {
-      return 0;
-    }
-  if (this.durability >= this.durabilityOriginal * 0.3) {
-   return this.attack;
-  } else {
-    return this.attack / 2;
+	if (this.durability === 0) {
+	  	return 0;
+	}
+	if (this.durability < this.durabilityOriginal * 0.3) {
+		return this.attack / 2;
+	} 
+  
+  return this.attack;
 
-  }
 }
 
+//метод, показывающий, сломано ли оружие
 isBroken() {
   if (this.durability > 0) {
     return false;
@@ -35,89 +38,59 @@ isBroken() {
 }
 }
 
-const sword = new Weapon({
-  name: 'Старый меч',
-  attack: 20,
-  durability: 10,
-  range: 1,
-});
-
-sword.takeDamage(5);
-console.log(sword.durability); // 5
-
-sword.takeDamage(50);
-console.log(sword.durability); // 0
-
-const arm = new Weapon({
-  name: 'Рука',
-  attack: 1,
-  durability: Infinity,
-  range: 1,
-});
-
-arm.takeDamage(20);
-console.log(arm.durability); // Infinity
-
-const bow = new Weapon({
-  name: 'Лук',
-  attack: 10,
-  durability: 200,
-  range: 3,
-});
-
-bow.takeDamage(20);
-console.log(bow.durability); // 180
-
-bow.takeDamage(200);
-console.log(bow.durability); // 0
-
 class Bow extends Weapon {
   constructor () {
-    super();
-    this.name = 'Лук';
-    this.attack = 10;
-    this.durability = 200;
-    this.range = 3;
+    super({
+	    name:'Лук',
+	    attack: 10,
+	    durability: 200,
+	    range: 3,
+    	});
+  	}
   }
-}
 
 class Knife extends Weapon {
   constructor () {
-    super();
-    this.name = 'Нож';
-    this.attack = 5;
-    this.durability = 300;
-    this.range = 1;
-  }
+    super({
+	   name: 'Нож',
+	   attack: 5,
+	   durability: 300,
+	   range: 1, 
+    });
+   }
 }
 
 class Sword extends Weapon {
    constructor () {
-    super();
-    this.name = 'Старый меч';
-    this.attack = 20;
-    this.durability = 10;
-    this.range = 1;
-  }
+    super({
+	   name: 'Меч',
+	   attack: 25,
+	   durability: 500,
+	   range: 1,
+ 
+    });
+   }
 }
 
 class Arm extends Weapon {
   constructor () {
-    super();
-    this.name = 'Рука';
-    this.attack = 1;
-    this.durability = Infinity;
-    this.range = 1;
+    super({
+	    name: 'Рука',
+		attack: 1,
+		durability: Infinity,
+		range: 1,
+    });
   }
 }
 
 class Staff extends Weapon {
   constructor () {
-    super();
-    this.name = 'Посох';
-    this.attack = 8;
-    this.durability = 300;
-    this.range = 2;
+    super({
+	    name: 'Посох',
+	    attack: 8,
+	    durability: 300,
+	    range: 2,
+	});	    
   }
 }
 
@@ -148,13 +121,29 @@ class StormStaff extends Staff {
   }
 };
 
-const arm = new Arm();
 const sword = new Sword();
+const arm = new Arm();
+const bow = new Bow();
 const longBow = new LongBow();
 const staff = new Staff();
-const knife = new Knife();
-
 const stormStaff = new StormStaff();
+const knife = new Knife();
+const ax = new Axe();
+
+sword.takeDamage(5);
+console.log(sword.durability); // 5
+
+sword.takeDamage(50);
+console.log(sword.durability); // 0
+
+arm.takeDamage(20);
+console.log(arm.durability); // Infinity
+
+bow.takeDamage(20);
+console.log(bow.durability); // 180
+
+bow.takeDamage(200);
+console.log(bow.durability); // 0
 
 console.log(stormStaff.name);
 stormStaff.takeDamage(10);
@@ -162,16 +151,11 @@ console.log(stormStaff.durability);
 console.log(stormStaff.getDamage()); 
 console.log(stormStaff.isBroken()); 
 
-const bow = new Bow();
-
 console.log(bow.name); 
 bow.takeDamage(60);
 console.log(bow.durability);
 console.log(bow.getDamage()); 
 console.log(bow.isBroken()); 
-
-
-const ax = new Axe();
 
 console.log(ax.name);
 ax.takeDamage(260);
