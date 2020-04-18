@@ -46,20 +46,25 @@ class AlarmClock {
 	//возвращает текущее время в строковом формате HH:MM
 	getCurrentFormattedTime() { 
 		let time = new Date();
-		return time.getHours() + ':' + time.getMinutes();
+		return time.getHours() + ':' + (time.getMinutes() < 10 ? '0' : '') + time.getMinutes();
+		//если минуты до 10 (типа 8 минут) то должно быть 08 (добавляем 0 к минутам), иначе не добавляем ничего
 	}
 	
 	//запускает все звонки
 	start() {
 		const checkClock = () => {
-			
-			if (this.alarmCollection.filter(item => item.time === getCurrentFormattedTime())) {
-				item.callback();
-			}
-			if (this.timerId === undefined) {
-				timerId = setInterval(checkClock);
-			}
-			
+			this.alarmCollection.forEach(item => {
+				//если время звонка совпадает с текущим временем, вызываем колбек
+				if (item.time == this.getCurrentFormattedTime()) {
+					item.callback();
+					// и чистим id чтобы не повторялся
+					this.removeClock(item.id);
+				}
+			});			
+		}
+		
+		if (this.timerId === null) {
+			this.timerId = setInterval(checkClock, 5000);	
 		}
 	}
 	
@@ -75,7 +80,7 @@ class AlarmClock {
 	printAlarms() {
 		console.log('Печать всех будильников в количестве: ' + this.alarmCollection.length)
 		this.alarmCollection.forEach((item) => {
-			console.log('Будильник № ' + item.id + 'заведен на ' + item.time);
+			console.log('Будильник № ' + item.id + ' заведен на ' + item.time);
 		});	
 	}
 	
@@ -102,7 +107,7 @@ class AlarmClock {
 		}, 3);
 	
 	phoneAlarm.addClock('21:05', () => console.log('Иди спать, завтра рано на работу'), 1);
-	
+	phoneAlarm.addClock('21:23', () => console.log('Иди умываться'), 1);
 	phoneAlarm.printAlarms();
 	
 	phoneAlarm.start();
